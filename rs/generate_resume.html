@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .template-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .template-card:hover {
+            transform: scale(1.05);
+        }
+        .template-preview {
+            max-width: 200px;
+        }
+        #resume-section, #resume {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Template Selection Section -->
+    <div id="template-selection-section">
+        <h1>Select a Resume Template</h1>
+        <div class="template-card" onclick="chooseTemplate(1)">
+            <img src="https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-my-resume-background-material-image_177383.jpg" class="template-preview" alt="Template 1">
+            <h4>Simple Template</h4>
+        </div>
+        <div class="template-card" onclick="chooseTemplate(2)">
+            <img src="https://i.pinimg.com/474x/12/25/ec/1225ec674dbd1714711ed257bfc98953.jpg" class="template-preview" alt="Template 2">
+            <h4>Modern Template</h4>
+        </div>
+        <div class="template-card" onclick="chooseTemplate(3)">
+            <img src="https://tse2.mm.bing.net/th?id=OIP.nTxRarDdYilk7xe0JEBGQQHaKe&pid=Api&P=0&h=180" class="template-preview" alt="Template 3">
+            <h4>Professional Template</h4>
+        </div>
+    </div>
+
+    <!-- Resume Form Section -->
+    <div id="resume-section">
+        <h1>Create Your Resume</h1>
+
+        <form id="resume-form">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" class="form-control" id="fullName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" class="form-control" id="phone" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+                <label for="summary">Summary</label>
+                <textarea class="form-control" id="summary" placeholder="Enter a brief summary"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="experience">Experience</label>
+                <textarea class="form-control" id="experience" placeholder="Enter your experience (separate by commas)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="education">Education</label>
+                <textarea class="form-control" id="education" placeholder="Enter your education (separate by commas)"></textarea>
+            </div>
+            <button type="button" id="generate-resume" class="btn btn-success mt-3">Generate Resume</button>
+        </form>
+
+        <!-- Display Resume -->
+        <div id="resume" class="mt-5"></div>
+
+        <button id="download-pdf" class="btn btn-primary mt-3" style="display:none;">Download as PDF</button>
+    </div>
+
+</div>
+
+<script>
+    // Function to choose template and navigate to the next section
+    function chooseTemplate(templateId) {
+        localStorage.setItem('selectedTemplate', templateId);
+
+        // Simulate page navigation by showing/hiding sections
+        document.getElementById('template-selection-section').style.display = 'none';
+        document.getElementById('resume-section').style.display = 'block';
+    }
+
+    // Function to display resume from form input
+    function displayResume() {
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const summary = document.getElementById('summary').value;
+        const experience = document.getElementById('experience').value.split(',');
+        const education = document.getElementById('education').value.split(',');
+
+        const resumeDiv = document.getElementById('resume');
+
+        let templateStyle = '';
+        const selectedTemplate = localStorage.getItem('selectedTemplate');
+        if (selectedTemplate == 1) {
+            templateStyle = '<h2 style="color: blue;">Simple Template</h2>';
+        } else if (selectedTemplate == 2) {
+            templateStyle = '<h2 style="color: green;">Modern Template</h2>';
+        } else if (selectedTemplate == 3) {
+            templateStyle = '<h2 style="color: red;">Professional Template</h2>';
+        }
+
+        resumeDiv.innerHTML = `
+            ${templateStyle}
+            <h3>${fullName}</h3>
+            <p>Email: ${email}</p>
+            <p>Phone: ${phone}</p>
+            <p>Summary: ${summary}</p>
+            <h4>Experience</h4>
+            <ul>
+                ${experience.map(item => `<li>${item.trim()}</li>`).join('')}
+            </ul>
+            <h4>Education</h4>
+            <ul>
+                ${education.map(item => `<li>${item.trim()}</li>`).join('')}
+            </ul>
+        `;
+
+        // Show download button after resume is generated
+        document.getElementById('download-pdf').style.display = 'block';
+    }
+
+    // Function to download resume as PDF
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const summary = document.getElementById('summary').value;
+        const experience = document.getElementById('experience').value.split(',');
+        const education = document.getElementById('education').value.split(',');
+
+        // Set PDF content
+        doc.setFontSize(20);
+        doc.text("Your Resume", 20, 20);
+
+        doc.setFontSize(16);
+        doc.text(`Name: ${fullName}`, 20, 40);
+        doc.text(`Email: ${email}`, 20, 50);
+        doc.text(`Phone: ${phone}`, 20, 60);
+        doc.text(`Summary: ${summary}`, 20, 70);
+
+        // Add experience
+        doc.text("Experience:", 20, 80);
+        experience.forEach((exp, index) => {
+            doc.text(`- ${exp.trim()}`, 20, 90 + (index * 10));
+        });
+
+        // Add education
+        doc.text("Education:", 20, 90 + (experience.length * 10) + 10);
+        education.forEach((edu, index) => {
+            doc.text(`- ${edu.trim()}`, 20, 90 + (experience.length * 10) + 20 + (index * 10));
+        });
+
+        // Save the PDF
+        doc.save(`${fullName}_Resume.pdf`);
+    }
+
+    // Event listeners
+    document.getElementById('generate-resume').addEventListener('click', displayResume);
+    document.getElementById('download-pdf').addEventListener('click', downloadPDF);
+</script>
+
+</body>
+</html>

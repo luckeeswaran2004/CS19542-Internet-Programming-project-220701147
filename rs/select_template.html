@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Resume Template</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .template-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .template-card:hover {
+            transform: scale(1.05);
+        }
+        .template-preview {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Select a Resume Template</h1>
+
+    <div class="template-card" onclick="chooseTemplate(1)">
+        <img src="https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-my-resume-background-material-image_177383.jpg" class="template-preview" alt="Template 1">
+        <h4>Simple Template</h4>
+    </div>
+
+    <div class="template-card" onclick="chooseTemplate(2)">
+        <img src="https://i.pinimg.com/474x/12/25/ec/1225ec674dbd1714711ed257bfc98953.jpg" class="template-preview" alt="Template 2">
+        <h4>Modern Template</h4>
+    </div>
+
+    <div class="template-card" onclick="chooseTemplate(3)">
+        <img src="https://tse2.mm.bing.net/th?id=OIP.nTxRarDdYilk7xe0JEBGQQHaKe&pid=Api&P=0&h=180" class="template-preview" alt="Template 3">
+        <h4>Professional Template</h4>
+    </div>
+</div>
+
+<script>
+    function chooseTemplate(templateId) {
+        localStorage.setItem('selectedTemplate', templateId);
+        window.location.href = 'generate_resume.html';
+    }
+</script>
+
+</body>
+</html>
